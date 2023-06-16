@@ -1,39 +1,37 @@
 #include <stdio.h>
 
-void print_exponent(double x) {
-  
-  unsigned long long *exponent_ptr = (unsigned long long *)&x;
+int bit_operations(int num, int oper_type) {
+    int result = num;
 
-  
-  unsigned int exponent = (*exponent_ptr >> 52) & 0x7FF;
-  if (exponent == 0) {
-    printf("Exponent is subnormal\n");
-  } else if (exponent == 0x7FF) {
-    printf("Exponent is infinity or NaN\n");
-  } else {
-    printf("Exponent in hexadecimal: 0x%03x\n", exponent);
-  }
+    switch (oper_type) {
+        case 1: 
+            result |= 1;  
+            break;
+        case 2:  // Clear 31st bit
+            result &= ~(1 << 31);  
+            break;
+        case 3:  // Toggle 16th bit
+            result ^= (1 << 16);  
+            break;
+        default:
+            printf("Invalid operation type\n");
+            return num; 
+    }
 
-  
-  unsigned int binary_exponent = exponent;
-  printf("Exponent in binary: 0b");
-  for (int i = 10; i >= 0; i--) {
-    printf("%d", (binary_exponent >> i) & 1);
-  }
-  printf("\n");
+    return result;
 }
 
 int main() {
-  
-  double x;
-  printf("\n Enter the Positive decimal number");
-  scanf("%lf",&x);
-  print_exponent(x);
+    int num, oper_type;
 
-  double y;
-  printf("\n Enter the Negative decimal number");
-  scanf("%lf",&y);  
-  print_exponent(y);
+    printf("Enter an integer (32 bits): ");
+    scanf("%d", &num);
 
-  return 0;
+    printf("Enter operation type (1, 2, or 3): ");
+    scanf("%d", &oper_type);
+
+    int result = bit_operations(num, oper_type);
+    printf("Result: %d\n", result);
+
+    return 0;
 }
